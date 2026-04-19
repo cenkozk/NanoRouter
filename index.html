@@ -37,7 +37,7 @@
 
     body {
       min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; padding: 60px 24px 80px;
+      align-items: center; padding: 40px 24px 60px;
       position: relative; z-index: 1;
     }
 
@@ -63,13 +63,13 @@
 
     .wrap {
       width: 100%; max-width: 580px; display: flex; flex-direction: column;
-      align-items: center; gap: 36px; text-align: center;
+      align-items: center; gap: 24px; text-align: center;
     }
 
     /* ── Hero ── */
-    .hero { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .hero { display: flex; flex-direction: column; align-items: center; gap: 8px; }
     h1 {
-      font-size: clamp(40px, 9vw, 62px); font-weight: 200;
+      font-size: clamp(32px, 8vw, 52px); font-weight: 200;
       letter-spacing: -0.045em; line-height: 1.05;
       color: var(--accent); text-shadow: 0 0 80px rgba(255,255,255,0.12);
     }
@@ -95,12 +95,12 @@
 
 
     /* ── Demo ── */
-    .demo { display: flex; flex-direction: column; gap: 16px; padding: 22px; }
+    .demo { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
     .input-row { display: flex; gap: 8px; align-items: center; }
     .query-input {
       flex: 1; background: rgba(255,255,255,0.06);
       border: 1px solid var(--border); border-radius: 10px;
-      padding: 11px 14px; font-size: 13px; font-family: 'Inter', sans-serif;
+      padding: 10px 14px; font-size: 13px; font-family: 'Inter', sans-serif;
       font-weight: 300; color: var(--text); outline: none;
       transition: border-color 0.2s, background 0.2s;
     }
@@ -118,7 +118,7 @@
     .icon-btn:active { transform: scale(0.92); }
 
     .route-btn {
-      padding: 11px 18px; border-radius: 10px;
+      padding: 10px 16px; border-radius: 10px;
       background: rgba(255,255,255,0.10); border: 1px solid var(--border-hi);
       color: var(--text); font-size: 12px; font-weight: 400; cursor: pointer;
       transition: background 0.2s, transform 0.12s; white-space: nowrap;
@@ -138,13 +138,13 @@
 
     /* ── Result ── */
     .result-panel {
-      display: flex; flex-direction: column; gap: 10px;
-      padding: 14px 16px; background: rgba(0,0,0,0.35);
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 12px 14px; background: rgba(0,0,0,0.35);
       border: 1px solid var(--border); border-radius: 10px;
-      min-height: 82px; text-align: left; transition: opacity 0.3s;
+      min-height: 70px; text-align: left; transition: opacity 0.3s;
     }
     .result-panel.empty { opacity: 0.45; }
-    .result-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .result-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .fn-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 400; color: var(--accent); }
     .latency-badge {
       padding: 3px 9px; border-radius: 99px;
@@ -163,8 +163,8 @@
     .call-display {
       font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--green);
       background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.12);
-      border-radius: 8px; padding: 11px 14px; letter-spacing: 0.02em;
-      word-break: break-all; line-height: 1.6;
+      border-radius: 8px; padding: 9px 12px; letter-spacing: 0.02em;
+      word-break: break-all; line-height: 1.5;
     }
     @keyframes callFlash {
       0%   { background: rgba(74,222,128,0.15); border-color: rgba(74,222,128,0.3); }
@@ -178,12 +178,12 @@
     .api-wrap { width: 100%; display: flex; flex-direction: column; gap: 10px; text-align: left; }
     .api-label {
       font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-      font-family: 'JetBrains Mono', monospace; color: var(--dim); margin-bottom: 2px;
+      font-family: 'JetBrains Mono', monospace; color: var(--dim); margin-bottom: 0px;
     }
-    .fn-list { display: flex; flex-direction: column; gap: 6px; }
+    .fn-list { display: flex; flex-direction: column; gap: 4px; }
     .fn-row {
       display: flex; align-items: flex-start; gap: 12px;
-      padding: 11px 16px; border-radius: 10px; border: 1px solid transparent;
+      padding: 8px 12px; border-radius: 10px; border: 1px solid transparent;
       cursor: pointer; transition: background 0.15s, border-color 0.15s;
       background: rgba(255,255,255,0.025);
     }
@@ -469,9 +469,18 @@
     const BIO_TAGS = routesData.bio_tags || ['O'];
 
     const CHIPS = [
-      'it is getting pitch black in the living room',
-      'i need some deep focus background music at my desk',
-      'remind me to check the pasta in twelve and a half minutes',
+      'turn on the living room lights',
+      'play lofi in the office',
+      'set a 12 minute timer',
+    ];
+
+    const RANDOM_EXAMPLES = [
+      "turn on the living room lights",
+      "play lofi in the office",
+      "set a 12 minute timer",
+      "lock the front door",
+      "set the thermostat to 68 degrees",
+      "close the office blinds"
     ];
     routes.forEach((route, idx) => {
       const shortDesc = route.description.split(/\. /)[0];
@@ -492,7 +501,7 @@
           <span class="fn-row-desc">${shortDesc}</span>
           ${enumsHtml ? `<div class="fn-row-params">${enumsHtml}</div>` : ''}
         </div>`;
-      const chip = CHIPS[idx] || shortDesc;
+      const chip = RANDOM_EXAMPLES[idx] || shortDesc;
       row.onclick = () => { inputEl.value = chip; window.doRoute(); };
       fnListEl.appendChild(row);
 
@@ -567,14 +576,16 @@
           if (new RegExp(`\\b${esc}\\b`, 'i').test(ql)) { best = v; break; }
         }
 
-        if (!best && !pdef.lexical && pdef.token_embeddings && q) {
+        if (!best && pdef.token_embeddings && q) {
           let bestScore = -Infinity, bestVal = null;
           for (const [v, tokMat] of Object.entries(pdef.token_embeddings)) {
             if (!tokMat?.length) continue;
             const s = maxsim(q.toks, q.seqLen, tokMat);
             if (s > bestScore) { bestScore = s; bestVal = v; }
           }
-          best = bestVal;
+          if (!pdef.lexical || bestScore >= 0.40) {
+            best = bestVal;
+          }
         }
 
         params[pname] = pdef.lexical ? best : (best ?? vals[0]);
@@ -644,14 +655,6 @@
       setTimeout(() => document.getElementById('callDisplay')?.classList.remove('flash'), 700);
     };
 
-    const RANDOM_EXAMPLES = [
-      "it is getting pitch black in the living room",
-      "i need some deep focus background music at my desk",
-      "remind me to check the pasta in twelve and a half minutes",
-      "i am leaving the house make sure the main entrance is secure",
-      "change the central heating to 68 degrees",
-      "the glare on my monitor is terrible right now"
-    ];
     let _ex = 0;
     window.doRandom = function() {
       inputEl.value = RANDOM_EXAMPLES[_ex++ % RANDOM_EXAMPLES.length];
