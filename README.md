@@ -7,7 +7,10 @@ A schema-conditioned API function router. Fine-tune once on your schema, route a
 
 Built on `all-MiniLM-L6-v2` (22 MB).
 
+![NanoRouter Example Interface](example.jpg)
+
 **[Live Demo Webpage](https://cenkozk.github.io/NanoRouter/)**
+
 
 ---
 
