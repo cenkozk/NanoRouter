@@ -440,8 +440,9 @@
         }
         ids.push(this.SEP);
         const mask=new Array(ids.length).fill(1);
+        const actualLen = ids.length;
         while (ids.length < maxLen) { ids.push(this.PAD); mask.push(0); }
-        return { input_ids: ids.slice(0,maxLen), attention_mask: mask.slice(0,maxLen) };
+        return { input_ids: ids.slice(0,maxLen), attention_mask: mask.slice(0,maxLen), actualLen: Math.min(actualLen, maxLen) };
       }
     }
 
@@ -524,7 +525,7 @@
       const res  = await session.run({ input_ids: i64(enc.input_ids), attention_mask: i64(enc.attention_mask) });
       const tokTen = res.token_embeddings;
       const bioTen = res.bio_logits;
-      const seqLen = tokTen.dims[1];
+      const seqLen = enc.actualLen;
       return {
         toks: new Float32Array(tokTen.data), seqLen,
         bioLogits: bioTen ? new Float32Array(bioTen.data) : null,
@@ -534,21 +535,34 @@
 
     function maxsim(qToks, qSeqLen, fnToksList) {
       let total = 0;
-      for (let j = 1; j < qSeqLen - 1; j++) {
-        const qOff = j * DIM;
-        let qNorm = 0;
-        for (let k = 0; k < DIM; k++) qNorm += qToks[qOff+k] * qToks[qOff+k];
-        qNorm = Math.sqrt(qNorm) + 1e-9;
+      let count = 0;
+      const vLen = fnToksList.length;
+      const startV = vLen > 2 ? 1 : 0;
+      const endV = vLen > 2 ? vLen - 1 : vLen;
+
+      for (let i = startV; i < endV; i++) {
+        const fnTok = fnToksList[i];
+        let fNorm = 0;
+        for (let k = 0; k < DIM; k++) fNorm += fnTok[k] * fnTok[k];
+        fNorm = Math.sqrt(fNorm) + 1e-9;
+
         let maxS = -1;
-        for (const fnTok of fnToksList) {
-          let dot = 0, fNorm = 0;
-          for (let k = 0; k < DIM; k++) { dot += qToks[qOff+k]*fnTok[k]; fNorm += fnTok[k]*fnTok[k]; }
-          const s = dot / (qNorm * (Math.sqrt(fNorm) + 1e-9));
+        // query tokens: exclude [CLS] and [PAD]s etc, we can scan all since pads have norm 0
+        for (let j = 0; j < qSeqLen; j++) {
+          const qOff = j * DIM;
+          let dot = 0, qNorm = 0;
+          for (let k = 0; k < DIM; k++) {
+            dot += fnTok[k] * qToks[qOff+k];
+            qNorm += qToks[qOff+k] * qToks[qOff+k];
+          }
+          qNorm = Math.sqrt(qNorm) + 1e-9;
+          const s = dot / (fNorm * qNorm);
           if (s > maxS) maxS = s;
         }
         total += maxS;
+        count++;
       }
-      return total / Math.max(qSeqLen - 2, 1);
+      return total / Math.max(count, 1);
     }
 
     function inferDuration(q) {
